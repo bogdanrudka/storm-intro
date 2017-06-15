@@ -1,0 +1,33 @@
+name: "twitter-topology"
+config:
+  topology.workers: 1
+  topology.tick.tuple.freq.secs: 10
+  twitter.auth.consumer.key: "D90TLnCCvJg5z5FZeNzmVnEmN"
+  twitter.auth.consumer.secret: "LsH88gx7nD0nNaxhavMUJkN7SecXtmuPBBOckfz2cunLEVElIR"
+  twitter.auth.access.token: "463121732-a1TAscbndH9TDhW3Xe2w7dhnalUtjcf2Nf8KVqbw"
+  twitter.auth.access.token.secret: "JunwsVLscJdB6GvOVjTATJvM1v5qbXcvsHVfOTsiW2sSR"
+  twitter.hashtags.top: 30
+  twitter.filter.hashtags: ["london", "building", "fire", "inferno", "disaster"]
+spouts:
+ - id: "twitter-spout"
+   className: com.softserve.community.spout.TwitterStreamSpout
+   parallelism: 1
+bolts:
+ - id: "tag-extract-bolt"
+   className: com.softserve.community.bolts.TweetSplitBolt parallelism: 1
+
+ - id: "tag-count-bolt"
+   className: com.softserve.community.bolts.HashtagsCountBoltBolt
+   parallelism: 2
+streams:
+ - name: "twitter-spout>tag-extract-bolt"
+   from: "twitter-spout"
+   to: "tag-extract-bolt"
+   grouping:
+    type: SHUFFLE
+ - name: "tag-extract-bolt>tag-count-bolt"
+   from: "tag-extract-bolt"
+   to: "tag-count-bolt"
+   grouping:
+    type: FIELDS
+    args: ["hashtag"]

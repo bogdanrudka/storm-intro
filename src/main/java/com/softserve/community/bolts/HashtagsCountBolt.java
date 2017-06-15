@@ -20,10 +20,11 @@ import twitter4j.HashtagEntity;
  */
 @Log4j2
 public class HashtagsCountBolt extends BaseBasicBolt {
-    private Map<String, Integer> hashtagsCount;
-    private long top;
 
-    @Override
+    private long top;
+    private HashMap<String, Integer> hashtagsCount;
+
+        @Override
     public void prepare(Map stormConf, TopologyContext context) {
         top = (long) stormConf.get("twitter.hashtags.top");
         hashtagsCount = new HashMap<>();
@@ -43,16 +44,13 @@ public class HashtagsCountBolt extends BaseBasicBolt {
 
     @Override
     public void cleanup() {
-        soutResult();
-    }
-
-    private void soutResult() {
         log.info("Building result table...");
         List<Map> tableData = new ArrayList<>();
         hashtagsCount.entrySet().stream()
-                .sorted((f1, f2) -> Integer.compare(f2.getValue(), f1.getValue())).limit(top)
-                .forEach(entry -> tableData.add(ImmutableMap.builder()
-                        .put("Hashtag", entry.getKey()).put("Count ", entry.getValue()).build()));
+            .sorted((f1, f2) -> Integer.compare(f2.getValue(), f1.getValue())).limit(top)
+            .forEach(entry -> tableData
+                    .add(ImmutableMap.builder().put("Hashtag", entry.getKey())
+                            .put("Count ", entry.getValue()).build()));
         new TextTable(new MapBasedTableModel(tableData)).printTable();
     }
 

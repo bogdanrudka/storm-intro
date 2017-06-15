@@ -32,18 +32,18 @@ public class TweetSplitBolt extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple tuple, BasicOutputCollector basicOutputCollector) {
-        if (TupleUtils.isTick(tuple)) {
-            return;
-        }
-        Status tweet = (Status) tuple.getValueByField("tweet");
-        log.info(tweet.getText());
-        for (HashtagEntity entity : tweet.getHashtagEntities()) {
-            basicOutputCollector.emit(new Values(entity));
-        }
+            if (TupleUtils.isTick(tuple)) {
+                    return;
+            }
+            Status tweet = (Status) tuple.getValueByField("tweet");
+            log.info(tweet.getText());
+            for (HashtagEntity entity : tweet.getHashtagEntities()) {
+                    basicOutputCollector.emit(new Values(entity));
+            }
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("hashtag"));
+            outputFieldsDeclarer.declare(new Fields("hashtag"));
     }
 }

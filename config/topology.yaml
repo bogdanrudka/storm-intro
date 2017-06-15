@@ -14,11 +14,13 @@ spouts:
    parallelism: 1
 bolts:
  - id: "tag-extract-bolt"
-   className: com.softserve.community.bolts.TweetSplitBolt parallelism: 1
+   className: com.softserve.community.bolts.TweetSplitBolt
+   parallelism: 1
 
  - id: "tag-count-bolt"
-   className: com.softserve.community.bolts.HashtagsCountBoltBolt
+   className: com.softserve.community.bolts.HashtagsCountBolt
    parallelism: 2
+
 streams:
  - name: "twitter-spout>tag-extract-bolt"
    from: "twitter-spout"

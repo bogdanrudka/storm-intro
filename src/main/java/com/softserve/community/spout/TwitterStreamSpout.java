@@ -21,17 +21,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Log4j2
 public class TwitterStreamSpout extends BaseRichSpout {
 
+    private LinkedBlockingQueue queue;
     private TwitterStream stream;
-    private LinkedBlockingQueue<Status> queue;
     private SpoutOutputCollector collector;
 
     public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector collector) {
         this.collector = collector;
+
         ConfigurationBuilder cnfg = new ConfigurationBuilder();
         String customerKey = (String) map.get("twitter.auth.consumer.key");
         String customerSecret = (String) map.get("twitter.auth.consumer.secret");
         String accessToken = (String) map.get("twitter.auth.access.token");
         String accessTokenSecret = (String) map.get("twitter.auth.access.token.secret");
+
         List<String> filterKeywords = (List) map.get("twitter.filter.hashtags");
 
         cnfg.setDebugEnabled(true).setOAuthConsumerKey(customerKey)
@@ -39,6 +41,7 @@ public class TwitterStreamSpout extends BaseRichSpout {
                 .setOAuthAccessTokenSecret(accessTokenSecret);
 
         queue = new LinkedBlockingQueue<>(1000);
+
         stream = new TwitterStreamFactory(cnfg.build()).getInstance();
         stream.addListener(new StatusAdapter() {
             public void onStatus(Status status) {
@@ -56,7 +59,7 @@ public class TwitterStreamSpout extends BaseRichSpout {
     }
 
     public void nextTuple() {
-     Status tweet = queue.poll();
+        Status tweet = (Status) queue.poll();
         if (tweet == null) {
             Utils.sleep(50);
         } else {

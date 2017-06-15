@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="EclipseCodeFormatter">
+    <option name="defaultSettings" value="true" />
+    <option name="formatter" value="ECLIPSE" />
+    <option name="id" value="1497383576386" />
+    <option name="importOrderConfigFilePath" value="E:/DEV/PROJECTS/IND-500/dev/coding/formatter.xml" />
+    <option name="name" value="default" />
+    <option name="pathToConfigFileJava" value="C:/WORK/DQM/PROJECTS/DQMEngine1/tools/coding/formatter.xml" />
+    <option name="selectedJavaProfile" value="iWay" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+</project>
